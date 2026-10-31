@@ -554,6 +554,17 @@ def add_region(t, room, layers, tilesets, where):
             raise ConvertError('%s: room %s: Region and RegionOpen use two tilesets' % (where, gm_str(room['id'])))
     t['Region'] = {'tileset': name, 'w': float(int(room['width']) // 8), 'h': float(int(room['height']) // 8),
                    'base': base, 'open': opened}
+    # the door each RegionOpen tile belongs to (paint_rooms.owners_rle), so the game opens only that door's passage
+    owners = get_prop(t.get('properties'), 'OpenOwners')
+    if owners != -1:
+        own = []
+        for run in str(owners).split(','):
+            n, door = run.split('*')
+            own += [float(door)] * int(n)
+        if len(own) != len(base):
+            raise ConvertError('%s: room %s: OpenOwners has %d cells, the room %d' % (where, gm_str(room['id']), len(own), len(base)))
+        t['Region']['own'] = own
+        t['properties'] = [q for q in t['properties'] if q.get('name') != 'OpenOwners']
     if 'RegionGate' in found:
         n3, gate = region_cells(found['RegionGate'], room, tilesets, where)
         if n3 not in (None, name):

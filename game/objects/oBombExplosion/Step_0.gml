@@ -59,6 +59,7 @@ if(image_index > 4 && !Exploded_Doors){ //check a bit later in the animation for
 		
 		//check for hidden doors
 		ObjCollision_Circle_List(CollisionList, x, y, BlastRadius_Doors, oDoor, FloorLevel);
+		RegionRoom_BlastDoors(CollisionList, x, y, BlastRadius_Doors, FloorLevel);	//painted rooms: the wall of the passage
 		var Doors = ds_list_size(CollisionList);
 	
 		var _SecretDoor = false;

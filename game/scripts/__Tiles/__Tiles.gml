@@ -367,6 +367,9 @@ function RegionRoom_Paint(_RoomIndex){
 	var _Gate = array_create(_RW * _RH, 0);
 	var _Sec = array_create(_RW * _RH, 0);
 	var _GateSrc = _Reg[$ "gate"];
+	//the door each open tile belongs to (paint_rooms.py, R1 seventh round): a label, the same after any transform
+	var _OwnSrc = _Reg[$ "own"];
+	var _Own = (_OwnSrc == undefined) ? undefined : array_create(_RW * _RH, 0);
 	// the low wall of the room's section (paint_sections.py), over the room: one tile layer per section group
 	var _SecSrc = undefined;
 	var _Secs = _Reg[$ "sections"];
@@ -382,6 +385,7 @@ function RegionRoom_Paint(_RoomIndex){
 			if(_V != 0) _Base[_Cell[1] * _RW + _Cell[0]] = (_V & 0xFFFF) | (RegionTiles_TransformFlags(_V >> 16, _Tr) << 16);
 			_V = _Reg.open[j * _W + i];
 			if(_V != 0) _Open[_Cell[1] * _RW + _Cell[0]] = (_V & 0xFFFF) | (RegionTiles_TransformFlags(_V >> 16, _Tr) << 16);
+			if(_Own != undefined) _Own[_Cell[1] * _RW + _Cell[0]] = _OwnSrc[j * _W + i];
 			_V = (_GateSrc == undefined) ? 0 : _GateSrc[j * _W + i];
 			if(_V != 0) _Gate[_Cell[1] * _RW + _Cell[0]] = (_V & 0xFFFF) | (RegionTiles_TransformFlags(_V >> 16, _Tr) << 16);
 		}
@@ -389,7 +393,7 @@ function RegionRoom_Paint(_RoomIndex){
 	//GateDY: how far below its door cell the gate's doorway is (16 for a gate under the door cell; the rooms painted
 	//from a frame put the 0x1B palace door in a slice of its facade, 64 px down: paint_auto.py, roadmap F12b-2)
 	_R.RegionGrid = {W : _RW, H : _RH, Tiles : _Base, Open : _Open, Gate : _Gate, Section : _Sec, Gates : [], Walls : [],
-		GateDY : _Reg[$ "gate_dy"] ?? 16, Lanes : []};
+		GateDY : _Reg[$ "gate_dy"] ?? 16, Lanes : [], Own : _Own};
 	//Lanes: the door cells (px in the room) of the doors the room uses; the only way across its outermost 8 px
 	for(var d = 0; d < array_length(_R.Doors); d++){
 		if(_R.Doors[d].Status != DoorStatus.Unused) array_push(_R.RegionGrid.Lanes, {X : _R.Doors[d].x, Y : _R.Doors[d].y, Location : _R.Doors[d].Location});
@@ -437,20 +441,38 @@ function RegionRoom_OpenPassage(_RoomIndex, _DX, _DY, _RemakeWalls = true, _Gate
 			if(_Src[j * _G.W + i] != 0) array_push(_Todo, j * _G.W + i);
 		}
 	}
+	//a room that knows the door of each open tile opens only the door's own: the label most of the open tiles of its
+	//cell carry (a neighbouring position's passage may reach into the cell's edge in a room with every door)
+	var _Owner = 0;
+	if(!_Gate && _G[$ "Own"] != undefined){
+		var _Votes = {};
+		var _Best = 0;
+		for(var v = 0; v < array_length(_Todo); v++){
+			var _L = string(_G.Own[_Todo[v]]);
+			_Votes[$ _L] = (_Votes[$ _L] ?? 0) + 1;
+			if(_G.Own[_Todo[v]] != 0 && _Votes[$ _L] > _Best){
+				_Best = _Votes[$ _L];
+				_Owner = _G.Own[_Todo[v]];
+			}
+		}
+	}
 	var _Seen = array_create(_G.W * _G.H, false);
 	var _Count = 0;
 	while(array_length(_Todo) > 0){
 		var _K = array_pop(_Todo);
 		if(_Seen[_K] || _Src[_K] == 0) continue;
 		_Seen[_K] = true;
-		//a passage stays in the 64x64 box of its opening: in a room with every door (a set's fallback) the openings
-		//of neighbouring positions touch, and one would open the next (a gate is wider and keeps its own tiles)
+		//a passage keeps to its own tiles: in a room with every door (a set's fallback) the openings of neighbouring
+		//positions touch, and one would open the next (a gate is wider and keeps its own tiles)
 		if(!_Gate){
 			var _PX = (_K mod _G.W) * 8;
 			var _PY = (_K div _G.W) * 8;
-			//24 px around the door cell: the ends of a passage of a room painted from a frame (paint_auto.py) stand
-			//a block beside its lane, which for the doors at 56 and 168 px reaches 24 px out
-			if(_PX < _DX - 24 || _PX >= _DX + 56 || _PY < _DY - 24 || _PY >= _DY + 56) continue;
+			if(_Owner != 0){
+				if(_G.Own[_K] != _Owner) continue;
+			}
+			//without labels: 24 px around the door cell (the ends of a passage of a room painted from a frame,
+			//paint_auto.py, stand a block beside its lane, which for the doors at 56 and 168 px reaches 24 px out)
+			else if(_PX < _DX - 24 || _PX >= _DX + 56 || _PY < _DY - 24 || _PY >= _DY + 56) continue;
 			//where the low wall of the room's section meets the frame, it stays: the passage opens only the lane Link
 			//walks through (the 32 px of the door cell across)
 			if(_G.Section[_K] != 0){
@@ -519,7 +541,7 @@ function RegionRoom_Walls(_RoomIndex){
 		for(var k = 0; k < array_length(_Keys); k++){
 			if(_Runs[$ _Keys[k]] != undefined) continue;
 			var _Run = _Open[$ _Keys[k]];
-			var _Wall = WallObj_Create("Objs_Upper", _R.x + _Run[0] * 8, _R.y + _Run[1] * 8, _Run[2] - _Run[0], j - _Run[1]);
+			var _Wall = RegionRoom_WallCreate(_R.x + _Run[0] * 8, _R.y + _Run[1] * 8, _Run[2] - _Run[0], j - _Run[1]);
 			_Wall.RegionRoom = _RoomIndex;
 			array_push(_G.Walls, _Wall);
 			variable_struct_remove(_Open, _Keys[k]);
@@ -532,6 +554,19 @@ function RegionRoom_Walls(_RoomIndex){
 		}
 	}
 	if(_Asleep) for(var n = 0; n < array_length(_G.Walls); n++) instance_deactivate_object(_G.Walls[n]);
+}
+
+/// An oWall of a painted room, as WallObj_Create makes it but without keeping it in the caller's WallInst: the walls
+/// are made again from a door's own code (a bombed secret door, Door_OpenSecretDoor, and the exit gate, RegionGate_Open,
+/// run in the door's with), and WallObj_Create would put the last of them in the door's WallInst, leaving the door's
+/// blocker shut with nothing to open it (R1 seventh round: Link could not walk through a bombed wall)
+function RegionRoom_WallCreate(_X, _Y, _TileW, _TileH){
+	var _Wall = instance_create_layer(_X, _Y, "Objs_Upper", oWall);
+	_Wall.image_xscale = _TileW;
+	_Wall.image_yscale = _TileH;
+	_Wall.Position = NONE;
+	_Wall.GID = 0;
+	return _Wall;
 }
 
 /// Whether tile i, j of a painted room is a wall: a solid tile, except in the doorway of an open gate in the top wall

@@ -292,12 +292,32 @@ function Test_PlaceLink(_RoomIndex, _Pos){
 	global.InWaterSprite = Link_GetInWaterSprite();
 }
 
-/// True when Link stands in a wall (an oWall that blocks him)
+/// Puts Link at the mouth of the passage of door _Door of room _RoomIndex (a room struct's door), _In px inside; where
+/// that is a wall (the face of the top wall over a side door by the corner, a lamp tower's foot, a chest under the
+/// door of a special room, the low wall of a section) the first free spot of 16 to 56 px inside, and for a side door
+/// 4 to 16 px lower (steps passall and bomb, R1 seventh round)
+function Test_PlaceAtPassage(_RoomIndex, _Door, _In){
+	var _R = global.Level.Rooms[_RoomIndex];
+	var _DX = (_Door.Location == "Left") ? 1 : ((_Door.Location == "Right") ? -1 : 0);
+	var _DY = (_Door.Location == "Top") ? 1 : ((_Door.Location == "Bottom") ? -1 : 0);
+	var _Ins = [_In, 16, 32, 40, 48, 56];
+	for(var i = 0; i < array_length(_Ins); i++){
+		for(var _Low = 0; _Low <= (_DX != 0 ? 16 : 0); _Low += 4){
+			Test_PlaceLink(_RoomIndex, [_R.x + _Door.x + 16 + _DX * _Ins[i], _R.y + _Door.y + 16 + _DY * _Ins[i] + _Low]);
+			if(!Test_LinkInWall()) return;
+		}
+	}
+}
+
+/// True when Link stands in a wall (an oWall that blocks him). Every wall under him counts: instance_place gives one,
+/// and an open door's blocker (BlockLink false) over a painted wall hid the wall (R1 seventh round)
 function Test_LinkInWall(){
 	var _In = false;
 	with(oLink){
-		var _W = instance_place(x, y, oWall);
-		_In = (_W != noone && _W.BlockLink);
+		var _List = ds_list_create();
+		var _N = instance_place_list(x, y, oWall, _List, false);
+		for(var i = 0; i < _N && !_In; i++) _In = _List[| i].BlockLink;
+		ds_list_destroy(_List);
 	}
 	return _In;
 }
@@ -739,11 +759,12 @@ function Test_DoStep(_S){
 			}
 			return StepFrames >= 10;	// the room wakes up and the camera gets there
 
-		case "tour":	// a photo of every room of the level ("name", default "tour": <name>_<room>_<n>.png): Link at the top of each 256 px cell of the room, and at the bottom of its last row, 12 frames for the room to wake and the camera to get there (the agreed photo set of a visual task, R1 sixth round)
+		case "tour":	// a photo of every room of the level ("name", default "tour": <name>_<room>_<n>.png; "sections": only the rooms with a section): Link at the top of each 256 px cell of the room, and at the bottom of its last row, 12 frames for the room to wake and the camera to get there (the agreed photo set of a visual task, R1 sixth round)
 			if(StepFrames == 1){
 				TourShots = [];
 				for(var _TR = 0; _TR < global.Level.RoomCount; _TR++){
 					var _TRm = global.Level.Rooms[_TR];
+					if((_S[$ "sections"] ?? false) && _TRm.Section_ID == 0) continue;	//only the rooms with a section (R1 seventh round)
 					for(var _TY = 0; _TY < _TRm.GridH; _TY++){
 						for(var _TX = 0; _TX < _TRm.GridW; _TX++){
 							array_push(TourShots, [_TR, _TRm.x + _TX * 256 + 128, _TRm.y + _TY * 256 + 96]);
@@ -766,6 +787,50 @@ function Test_DoStep(_S){
 					break;
 				case 11:
 					ShotName = string(_S[$ "name"] ?? "tour") + "_" + string(_TS[0]) + "_" + string(_TK);
+					break;
+			}
+			return false;
+
+		case "doorshots":	// a photo of every door of every painted room in use ("name", default "door": <name>_r<room>_p<position>.png), Link "in" px inside in front of it (default 40), 12 frames for the room to wake and the camera to get there; each logs "doorshot" with the door cell in the level, so tools/test/seam_sheet.py puts the two sides of a seam together (R1 seventh round)
+			if(StepFrames == 1){
+				TourShots = [];
+				for(var _DR = 0; _DR < global.Level.RoomCount; _DR++){
+					if(!RegionRoom_Is(_DR)) continue;
+					var _DRm = global.Level.Rooms[_DR];
+					for(var _DD = 0; _DD < array_length(_DRm.Doors); _DD++){
+						var _DDr = _DRm.Doors[_DD];
+						if(_DDr.Status == DoorStatus.Unused) continue;
+						var _DIn = _S[$ "in"] ?? 40;
+						var _DSX = _DRm.x + _DDr.x + 16, _DSY = _DRm.y + _DDr.y + 16;
+						switch(_DDr.Location){
+							case "Top":		_DSY += _DIn; break;
+							case "Bottom":	_DSY -= _DIn; break;
+							case "Left":	_DSX += _DIn; break;
+							default:		_DSX -= _DIn; break;
+						}
+						array_push(TourShots, [_DR, _DSX, _DSY, _DDr.Position]);
+						Test_Log("doorshot name=" + string(_S[$ "name"] ?? "door") + " room=" + string(_DR) + " pos=" + string(_DDr.Position) + " " + _DDr.Location + " status=" + string(_DDr.Status)
+							+ " to=" + string(_DDr.ConnectedRoomIndex) + " cell=" + string(_DRm.x + _DDr.x) + "," + string(_DRm.y + _DDr.y) + " room_at=" + string(_DRm.x) + "," + string(_DRm.y) + " size=" + string(_DRm.width) + "x" + string(_DRm.height));
+					}
+				}
+				Test_Log("doorshots shots=" + string(array_length(TourShots)));
+			}
+			var _DK = (StepFrames - 1) div 12;
+			if(_DK >= array_length(TourShots)) return true;
+			var _DS = TourShots[_DK];
+			switch((StepFrames - 1) mod 12){
+				case 0:
+					if(oCamera.RoomTransition != NONE){
+						Test_Fail("doorshots: a room transition is under way");
+						return true;
+					}
+					Test_PlaceLink(_DS[0], [_DS[1], _DS[2]]);
+					break;
+				case 9:
+					with(oEnemy) instance_destroy(id);	//the room is awake: its enemies out of the photo
+					break;
+				case 11:
+					ShotName = string(_S[$ "name"] ?? "door") + "_r" + string(_DS[0]) + "_p" + string(_DS[3]);
 					break;
 			}
 			return false;
@@ -829,6 +894,144 @@ function Test_DoStep(_S){
 			else if(Test_LinkInWall()) Test_Fail("pass: in_wall in room " + string(global.CurrentRoomIndex));
 			else Test_Log("pass went to room=" + string(global.CurrentRoomIndex));
 			return true;
+
+		case "passall":	// every open or locked door of every room of the level (R1 seventh round; give Link keys for the locked ones): Link at the mouth of its passage, "in" px inside (default 24; another spot 16 to 56 px in where that is a wall), walks through it for at most "frames" (default 240); he must reach the room behind it, out of the walls. The room's enemies die first (they would push him back)
+		case "bomb":	// every secret door of the level, the top ones (with the crack) first: Link "in" px inside in front of it, walks into the wall for 20 frames and puts a lit bomb down in front of him (as the bomb item does); the door must open and he walks through it to the room behind; "optional": a level without one is not a failure
+			var _Bomb = (_Do == "bomb");
+			if(StepFrames == 1){
+				PassList = [];
+				for(var _PLi = 0; _PLi < global.Level.RoomCount; _PLi++){
+					var _PLR = global.Level.Rooms[_PLi];
+					for(var _PD = 0; _PD < array_length(_PLR.Doors); _PD++){
+						var _PSt = _PLR.Doors[_PD].Status;
+						if(_Bomb ? (_PSt == DoorStatus.Secret_Closed) : (_PSt == DoorStatus.Open || _PSt == DoorStatus.Secret_Open || _PSt == DoorStatus.Locked)){
+							if(_Bomb && _PLR.Doors[_PD].Location == "Top") array_insert(PassList, 0, [_PLi, _PD]);
+							else array_push(PassList, [_PLi, _PD]);
+						}
+					}
+				}
+				PassK = 0;
+				PassT = 0;
+				PassOk = 0;
+				PassBad = 0;
+				Test_Log(_Do + " doors=" + string(array_length(PassList)));
+				if(_Bomb && array_length(PassList) == 0 && !(_S[$ "optional"] ?? false)) Test_Fail("bomb: no secret door in the level");
+			}
+			//the camera transition pauses the game until Link has walked in: moving him before that leaves it paused
+			var _PSettled = (oCamera.RoomTransition == NONE && !global.Paused && instance_exists(oLink) && oLink.State != LinkState.AutoMove);
+			if(PassK >= array_length(PassList)){
+				if(!_PSettled) return false;
+				Test_Log(_Do + " ok=" + string(PassOk) + " failed=" + string(PassBad));
+				return true;
+			}
+			var _PE = PassList[PassK];
+			var _PRm = global.Level.Rooms[_PE[0]];
+			var _PDr = _PRm.Doors[_PE[1]];
+			var _PWhere = "room=" + string(_PE[0]) + " door=" + string(_PDr.Position) + " " + _PDr.Location;
+			PassT++;
+			if(PassT == 1){
+				//a bombed secret door opens the one behind it too: nothing left to do there
+				var _PDone = false;
+				with(oDoor) if(RoomIndex == _PDr.ConnectedRoomIndex && ConnectedRoomIndex == _PE[0] && Status == DoorStatus.Secret_Open) _PDone = true;
+				if(_Bomb && (_PDr.Status != DoorStatus.Secret_Closed || _PDone)){
+					Test_Log("bomb " + _PWhere + " opened from the other side");
+					PassK++;
+					PassT = 0;
+					return false;
+				}
+				if(!_PSettled){
+					PassT = 0;
+					return false;
+				}
+				switch(_PDr.Location){
+					case "Top":		PassVerb = "up"; break;
+					case "Bottom":	PassVerb = "down"; break;
+					case "Left":	PassVerb = "left"; break;
+					default:		PassVerb = "right"; break;
+				}
+				Test_PlaceAtPassage(_PE[0], _PDr, _S[$ "in"] ?? 24);
+				return false;
+			}
+			if(PassT < 10){
+				//the room's enemies would push him back: they die as the sword kills them (their Destroy event cleans up
+				//what they made), once the room is awake (the other rooms sleep, so with() only finds this one's)
+				if(PassT == 9) with(oEnemy) instance_destroy(id);
+				return false;
+			}
+			if(_Bomb){
+				var _PInst = noone;
+				with(oDoor) if(RoomIndex == _PE[0] && Position == _PDr.Position) _PInst = id;
+				if(PassT < 30){
+					Test_HoldVerbs([PassVerb]);
+					if(PassT == 29) ShotName = "bomb_" + string(PassK) + "_before";	//the wall with its crack (photos of the round)
+					return false;
+				}
+				if(PassT == 30){
+					PassOpened = false;
+					var _BX = oLink.x, _BY = oLink.y;
+					switch(PassVerb){
+						case "up":		_BY -= 12; break;
+						case "down":	_BY += 12; break;
+						case "left":	_BX -= 14; break;
+						default:		_BX += 14; break;
+					}
+					var _BInst = instance_create_layer(_BX, _BY, oLink.layer, oBomb, {From : ItemFrom.Inventory, FloorLevel : oLink.FloorLevel});
+					_BInst.Index = 0;
+					_BInst.visible = true;
+					_BInst.alarm[0] = Bomb_IgniteDelay;
+					Test_Log("bomb " + _PWhere + " door_cell=" + string(_PDr.x) + "," + string(_PDr.y) + " bomb=" + string(round(_BX - _PRm.x)) + "," + string(round(_BY - _PRm.y)));
+					return false;
+				}
+				//kept once seen: after he walks through, the room (and the door) is put to sleep
+				if(_PInst != noone && _PInst.Status == DoorStatus.Secret_Open) PassOpened = true;
+				if(!PassOpened && PassT < 220) return false;
+				if(!PassOpened){
+					PassBad++;
+					ShotName = _Do + "_fail_" + string(PassK);
+					Test_Fail("bomb: the wall stayed shut " + _PWhere);
+					PassK++;
+					PassT = 0;
+					return false;
+				}
+				if(PassT < 240) return false;	// the blast is over (Link may have been knocked back)
+				//back to the mouth of the passage: the way across the room is the player's (the chest of the large
+				//treasure room stands right under its secret door)
+				if(PassT == 240){
+					Test_PlaceAtPassage(_PE[0], _PDr, _S[$ "in"] ?? 24);
+					ShotName = "bomb_" + string(PassK) + "_after";
+					Test_Log("bomb " + _PWhere + " opened, Link at the passage " + string(round(oLink.x - _PRm.x)) + "," + string(round(oLink.y - _PRm.y)) + (Test_LinkInWall() ? " (in a wall)" : ""));
+				}
+			}
+			var _PFrames = (_S[$ "frames"] ?? 240) + (_Bomb ? 240 : 0);
+			//there once the camera has stopped and Link has walked in (the transition pauses the game until his steps end)
+			var _PThere = (global.CurrentRoomIndex != _PE[0] && oCamera.RoomTransition == NONE && instance_exists(oLink) && oLink.State != LinkState.AutoMove && !global.Paused);
+			if(!_PThere && PassT < _PFrames){
+				Test_HoldVerbs([PassVerb]);
+				return false;
+			}
+			var _PTarget = _PDr.ConnectedRoomIndex;
+			if(_PThere && instance_exists(oLink) && !Test_LinkInWall() && (_PTarget < 0 || global.CurrentRoomIndex == _PTarget)){
+				PassOk++;
+				Test_Log(_Do + " " + _PWhere + " -> " + string(global.CurrentRoomIndex) + " ok");
+			}else{
+				PassBad++;
+				ShotName = _Do + "_fail_" + string(PassK);
+				//the walls right in front of him, to tell a painted wall from a door's blocker or another object
+				var _PWalls = "";
+				if(instance_exists(oLink)){
+					var _PLX = oLink.x, _PLY = oLink.y, _PRX = _PRm.x, _PRY = _PRm.y;
+					with(oWall) if(BlockLink && bbox_right >= _PLX - 10 && bbox_left <= _PLX + 10 && bbox_bottom >= _PLY - 20 && bbox_top <= _PLY + 4) _PWalls += " [" + object_get_name(object_index) + " " + string(bbox_left - _PRX) + "," + string(bbox_top - _PRY) + "-" + string(bbox_right - _PRX) + "," + string(bbox_bottom - _PRY) + (variable_instance_exists(id, "RegionRoom") ? " painted" : "") + (IsDoorEntrance ? " door_blocker" : "") + " " + string(id) + "]";
+				}
+				Test_Log(_Do + " walls by Link:" + _PWalls);
+				var _PDoors = "";
+				with(oDoor) if(RoomIndex == global.CurrentRoomIndex) _PDoors += " [" + string(id) + " pos=" + string(Position) + " status=" + string(Status) + " upd=" + string(UpdateStatus) + " wall=" + (instance_exists(WallInst) ? string(WallInst.id) + " block=" + string(WallInst.BlockLink) : string(WallInst)) + "]";
+				Test_Log(_Do + " doors here:" + _PDoors);
+				Test_Fail(_Do + " " + _PWhere + " blocked at " + (instance_exists(oLink) ? string(round(oLink.x - _PRm.x)) + "," + string(round(oLink.y - _PRm.y)) : "no_link")
+					+ " (in room " + string(global.CurrentRoomIndex) + ", want " + string(_PTarget) + (Test_LinkInWall() ? ", in a wall" : "") + ")");
+			}
+			PassK++;
+			PassT = 0;
+			return false;
 
 		case "lock":	// a locked door of a painted room (R1): Link "side" px across from its middle, 32 px inside, walks into it for "frames" (default 120); he must stay in the room, out of the walls, with no camera transition
 			if(StepFrames == 1){

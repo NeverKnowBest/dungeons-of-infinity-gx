@@ -47,6 +47,7 @@ SIZES = {'1x1': (256, 256, 0), '1x2': (256, 512, 1), '2x1': (512, 256, 2)}    # 
 ROOM_KEYS = {'name', 'size', 'doors', 'decor', 'transforms', 'props', 'comment', 'frame', 'nature', 'sections', 'fallback'}
 SPECIAL_KEYS = {'frame', 'comment'}
 SPECIAL_LAYERS = ('Water', 'FloorObjs', 'Objs')      # the objects of a special room that are copied into its painted copy
+WALKED_OBJECTS = {86}       # Objs Link walks over (Rupee_05: picked up); the others (chests, statues, the altar, shops...) block
 KIT_KEYS = {'tiles', 'area', 'pieces', 'frame', 'frames', 'openings', 'gate', 'grass', 'nature', 'parapet', 'auto',
             'comment'}
 GRASS_KEYS = ('full', 'top', 'bottom', 'left', 'corner', 'inner')
@@ -97,7 +98,7 @@ class Kit:
         # recolored copies of area cells (tiles/extra.json): (map16, recolor name) -> block
         self.recolored = {(b['map16'], b['recolor']): i for i, b in enumerate(tiles['blocks']) if b.get('recolor')}
         self.block_map16 = [b['map16'] for b in tiles['blocks']]
-        self.halves = {}    # (col, row, recolor) of an "h" cell -> its block, after the region's (half_block)
+        self.halves = {}    # (col, row, recolor, down) of an "h" or "vh" cell -> its block, after the region's (half_block)
         data = os.path.join(convert.REPO, 'game', 'datafiles', 'data', 'tiles', self.name + '.json')
         self.solid = json.load(open(data, encoding='utf-8'))['solid']
         areas = json.load(open(os.path.join(folder, 'areas.json'), encoding='utf-8'))
@@ -146,14 +147,17 @@ class Kit:
 
     def cell(self, cell, where):
         """(block, mirrored, flipped) of [col, row, flags...]: "m" mirrored, "v" flipped, "h" the right half of the
-        cell beside the left half of the next one (half_block), any other word the copy of that cell recolored by the
-        region's tiles/extra.json (with "h", of each half that has that copy)."""
+        cell beside the left half of the next one (half_block), "vh" the bottom half of the cell above the top half of
+        the one below it, any other word the copy of that cell recolored by the region's tiles/extra.json (with "h" or
+        "vh", of each half that has that copy)."""
         c, r = cell[0], cell[1]
         block = self.area[r][c]
         m = v = False
-        if 'h' in cell[2:]:
-            words = [f for f in cell[2:] if f not in ('m', 'v', 'h')]
-            return (self.half_block(c, r, words[0] if words else None, where), 'm' in cell[2:], 'v' in cell[2:])
+        for half in ('h', 'vh'):
+            if half in cell[2:]:
+                words = [f for f in cell[2:] if f not in ('m', 'v', 'h', 'vh')]
+                return (self.half_block(c, r, words[0] if words else None, where, half == 'vh'),
+                        'm' in cell[2:], 'v' in cell[2:])
         for f in cell[2:]:
             if f == 'm':
                 m = True
@@ -167,22 +171,28 @@ class Kit:
                 block = self.recolored[key]
         return (block, m, v)
 
-    def half_block(self, c, r, recolor, where):
+    def half_block(self, c, r, recolor, where, down=False):
         """A block that no map has: the right half of cell c, r beside the left half of cell c + 1, r (each the copy
         recolored by recolor where the region has one). A wall's end moved half a block, so a passage cut in a wall
-        ends with the wall's own corner and stays as wide as its door (R1, sixth round)."""
-        if c + 1 >= len(self.area[r]):
-            raise PaintError('%s: cell %d,%d "h" needs the cell to its right' % (where, c, r))
-        key = (c, r, recolor)
+        ends with the wall's own corner and stays as wide as its door (R1, sixth round). down: the bottom half of
+        cell c, r above the top half of cell c, r + 1, a wall's edge moved half a block down, so a side passage
+        between two thin rims is as tall as its door (R1, seventh round)."""
+        if (r + 1 >= len(self.area)) if down else (c + 1 >= len(self.area[r])):
+            raise PaintError('%s: cell %d,%d "%s" needs the cell %s' % (where, c, r, 'vh' if down else 'h',
+                                                                       'below it' if down else 'to its right'))
+        key = (c, r, recolor, down)
         if key not in self.halves:
             parts = []
-            for cc in (c, c + 1):
-                b = self.area[r][cc]
+            for cc, rr in ((c, r), (c, r + 1)) if down else ((c, r), (c + 1, r)):
+                b = self.area[rr][cc]
                 if recolor is not None:
                     b = self.recolored.get((self.block_map16[b], recolor), b)
                 parts.append(self.blocks[b])
             self.halves[key] = len(self.blocks)
-            self.blocks.append([parts[0][1], parts[1][0], parts[0][3], parts[1][2]])
+            if down:
+                self.blocks.append([parts[0][2], parts[0][3], parts[1][0], parts[1][1]])
+            else:
+                self.blocks.append([parts[0][1], parts[1][0], parts[0][3], parts[1][2]])
         return self.halves[key]
 
     def piece(self, v, where):
@@ -232,6 +242,9 @@ class Painted:
         self.layers, self.groups = {}, {}
         self.base = [[None] * (self.cw * 2) for _ in range(self.ch * 2)]     # 8x8 tiles: (tile, flags) or None
         self.open = [[None] * (self.cw * 2) for _ in range(self.ch * 2)]
+        # the door each tile of RegionOpen belongs to (the last passage stamped on it): the game opens only the tiles of
+        # the door, so a passage never runs on into a neighbouring position's (R1 seventh round, rooms with every door)
+        self.owner = [[0] * (self.cw * 2) for _ in range(self.ch * 2)]
         self.gate = [[None] * (self.cw * 2) for _ in range(self.ch * 2)]
         self.gate_doors = []
         self.gate_boxes = []
@@ -303,10 +316,15 @@ class Painted:
             raise PaintError('%s: "doors" lists the door positions of the room (1 to 12), or is "all"' % where)
         self.doors = {}
         boxes = []
+        self.blocked_doors = []
+        under = []
         for p in doors:
             if not isinstance(p, int) or not 1 <= p <= 12:
                 raise PaintError('%s: door %s is not a position 1 to 12' % (where, p))
             loc = convert.door_location(p)
+            if self.special and self.door_blocked(p, loc, k.get(k.openings[loc], where), W, H, th, bh, lw, rw):
+                self.blocked_doors.append(p)
+                continue
             if loc not in k.openings:
                 raise PaintError('%s: door %d is on the %s wall and the kit has no opening there' % (where, p, loc))
             x, y = coords[(p - 1) * 2], coords[(p - 1) * 2 + 1]
@@ -318,9 +336,15 @@ class Painted:
             pw, ph = len(piece[0]) * 16, len(piece) * 16
             ox = {'Top': (x - 16, 0), 'Bottom': (x - 16, H - ph), 'Left': (0, y - 16), 'Right': (W - pw, y - 16)}[loc]
             # a side door by the top corner (positions 2 and 10) runs under the top wall: its passage leaves the
-            # wall's face whole above it instead of cutting the corner away (R1, sixth round: "canto com aresta vazia")
-            self.stamp(self.open, piece, ox[0], ox[1], where=where, clip_top=th if loc in ('Left', 'Right') else 0)
+            # wall's face whole above it instead of cutting the corner away (R1, sixth round: "canto com aresta vazia"),
+            # and the top wall goes on over it to the room's edge (under_top_wall)
+            side = loc in ('Left', 'Right')
+            self.stamp_open(piece, ox[0], ox[1], p, clip_top=max(th, y) if side else 0)
+            if side and y - 16 < th:
+                under.append((p, loc, y))
             boxes.append((p, (ox[0], ox[1], pw, ph)))
+        for p, loc, y in under:         # after every passage: it keeps off the tiles of the next top door's
+            self.under_top_wall(p, loc, y, top[1], th, lw, rw)
         for i, (p, a) in enumerate([] if self.special or self.all_doors else boxes):
             for q, b in boxes[i + 1:]:
                 if convert.rect_overlap((a[0], a[1], a[0] + a[2], a[1] + a[3]), (b[0], b[1], b[0] + b[2], b[1] + b[3])):
@@ -353,6 +377,90 @@ class Painted:
         else:
             self.furnish()
             self.sections()
+
+    def stamp_open(self, piece, x, y, p, clip_top=0):
+        """Stamps door p's passage on RegionOpen, the tiles marked as door p's."""
+        tmp = [[None] * len(self.open[0]) for _ in self.open]
+        self.stamp(tmp, piece, x, y, where=self.where, clip_top=clip_top)
+        for gy, row in enumerate(tmp):
+            for gx, t in enumerate(row):
+                if t is not None:
+                    self.open[gy][gx] = t
+                    self.owner[gy][gx] = p
+
+    def under_top_wall(self, p, loc, y, centre, th, lw, rw):
+        """The passage of a side door by the top corner runs under the top wall (R1 seventh round): over it the wall
+        goes on to the room's edge, as the 0x1B moat runs under its wall, instead of the corner's post with the roof's
+        cream cut straight above the passage. The wall's middle piece goes on in step over the side wall's columns,
+        the corner's post included, except on the tiles of another door's passage (the next top door's in a room with
+        every door, whose wall end overlaps the corner's last 8 px), and where the top wall is not as low as the door
+        (the special rooms' frame) the floor goes up to it."""
+        W = self.w
+        pw = len(centre[0]) * 16
+        tmp = [[None] * len(self.open[0]) for _ in self.open]
+        x0 = lw - pw * ((lw + pw - 1) // pw)
+        for bx in range(x0, W, pw):
+            self.stamp(tmp, centre, bx, 0, where=self.where)
+        cols = range(0, lw // GRID) if loc == 'Left' else range((W - rw) // GRID, W // GRID)
+        floor = self.kit.get('floor', self.where)[0][0]
+        for gx in cols:
+            for gy in range(th // GRID):
+                if tmp[gy][gx] is not None and self.owner[gy][gx] in (0, p):
+                    self.open[gy][gx] = tmp[gy][gx]
+                    self.owner[gy][gx] = p
+        if y > th:
+            fcols = range(0, lw // GRID) if loc == 'Left' else range((W - rw) // GRID, W // GRID)
+            ftmp = [[None] * len(self.open[0]) for _ in self.open]
+            for gx in fcols:
+                for gy in range(th // GRID, y // GRID):
+                    self.stamp(ftmp, [[floor]], (gx // 2) * 16, (gy // 2) * 16, where=self.where)
+                    self.open[gy][gx] = ftmp[gy][gx]
+                    self.owner[gy][gx] = p
+
+    def door_blocked(self, p, loc, piece, W, H, th, bh, lw, rw):
+        """Whether Link cannot walk from door p of a special room into the room: from inside its passage, 16x16 at a
+        time over walkable tiles (the frame with this passage open) clear of the room's objects (Objs and Water; floor
+        objects and rupees are walked over), he must get 40 px past the wall. The objects are laid out for the dungeon's walls,
+        thinner than the painted frame: under a dungeon's top wall the altar of a treasure room or a corner statue
+        leaves 16 px to walk round it, under the painted one none, and the top door led into the altar (R1 seventh
+        round). The game then takes another special room for that door."""
+        x, y = convert.DOOR_XY[self.size_index][(p - 1) * 2], convert.DOOR_XY[self.size_index][(p - 1) * 2 + 1]
+        grid = [row[:] for row in self.base]
+        pw, ph = len(piece[0]) * 16, len(piece) * 16
+        ox = {'Top': (x - 16, 0), 'Bottom': (x - 16, H - ph), 'Left': (0, y - 16), 'Right': (W - pw, y - 16)}[loc]
+        self.stamp(grid, piece, ox[0], ox[1], where=self.where, clip_top=th if loc in ('Left', 'Right') else 0)
+        cw, ch = len(grid[0]), len(grid)
+        free = [[grid[j][i] is not None and not self.solid_at(grid, i, j) for i in range(cw)] for j in range(ch)]
+        for layer in ('Objs', 'Water'):
+            for o in self.special['objects'].get(layer, []):
+                if o.get('gid') in WALKED_OBJECTS:
+                    continue
+                for j in range(max(0, o['y'] // GRID), min(ch, (o['y'] + o['height'] + GRID - 1) // GRID)):
+                    for i in range(max(0, o['x'] // GRID), min(cw, (o['x'] + o['width'] + GRID - 1) // GRID)):
+                        free[j][i] = False
+
+        def ok(i, j):
+            return 0 <= i < cw - 1 and 0 <= j < ch - 1 and free[j][i] and free[j][i + 1] and free[j + 1][i] and free[j + 1][i + 1]
+        # the start: Link in the door cell's lane, just inside the wall; the goal: 40 px past the wall
+        if loc in ('Top', 'Bottom'):
+            sy = (th - 16) // GRID if loc == 'Top' else (H - bh) // GRID
+            start = [(i, sy) for i in range(x // GRID, (x + 16) // GRID + 1)]
+        else:
+            sx = (lw - 16) // GRID if loc == 'Left' else (W - rw) // GRID
+            start = [(sx, j) for j in range(y // GRID, (y + 16) // GRID + 1)]
+        goal = {'Top': lambda i, j: j * GRID >= th + 40, 'Bottom': lambda i, j: (j + 2) * GRID <= H - bh - 40,
+                'Left': lambda i, j: i * GRID >= lw + 40, 'Right': lambda i, j: (i + 2) * GRID <= W - rw - 40}[loc]
+        todo = [c for c in start if ok(*c)]
+        seen = set(todo)
+        while todo:
+            i, j = todo.pop()
+            if goal(i, j):
+                return False
+            for n in ((i + 1, j), (i - 1, j), (i, j + 1), (i, j - 1)):
+                if n not in seen and ok(*n):
+                    seen.add(n)
+                    todo.append(n)
+        return True
 
     def build_auto(self):
         """The room from the set's frame (paint_auto.py): the shared border around the reference room's inside, the
@@ -547,6 +655,15 @@ class Painted:
                         for gx2 in range(b[0] // GRID, (b[0] + b[2]) // GRID):
                             self.gate[gy2][gx2] = self.bare[gy2][gx2]
             self.stamp(self.gate, piece, gx, gy, where=self.where)
+            # the game paints the gate instead of the passage, so the passage's tiles between the floor and the gate
+            # go on the gate layer too: the stairs of a bottom exit start under the rim, which stayed shut above them
+            # and left the level with no way out (R1, seventh round)
+            rows = range(self.inner[3], gy) if loc == 'Bottom' else range(gy + ph, self.inner[1])
+            for py in rows:
+                for px in range(gx, gx + pw, GRID):
+                    t = self.open[py // GRID][px // GRID]
+                    if t is not None and self.gate[py // GRID][px // GRID] is None:
+                        self.gate[py // GRID][px // GRID] = t
             self.gate_doors.append(p)
             self.gate_boxes.append((gx, gy, pw, ph))
 
@@ -864,6 +981,8 @@ class Painted:
         if self.special:
             p = dict(self.special['props'])
             p['Transforms'] = 'None'            # special rooms are picked untransformed (RoomTemplates_PickSpecial)
+            if any(any(row) for row in self.owner):
+                p['OpenOwners'] = owners_rle(self.owner)
             if self.kit.auto and self.gate_doors:
                 p['GateDY'] = self.kit.auto.gate_dy
             return p
@@ -874,6 +993,8 @@ class Painted:
             p['GateDY'] = self.kit.auto.gate_dy     # how far below the door cell the gate's doorway is (RegionRoom_Paint)
         if self.d.get('fallback', self.all_doors):
             p['Fallback'] = 1       # picked only when no other room of the set fits (RoomTemplates_Pick)
+        if any(any(row) for row in self.owner):
+            p['OpenOwners'] = owners_rle(self.owner)    # convert.py makes it Region.own
         p.update(self.d.get('props') or {})
         return p
 
@@ -890,6 +1011,20 @@ class Painted:
                     line.append((firstgid + tile) | (TILED_H if fl & 1 else 0) | (TILED_V if fl & 2 else 0))
             out.append(line)
         return out
+
+
+def owners_rle(grid):
+    """The door of each RegionOpen tile, row by row, as runs "count*door" (0: no door), for the map's room property
+    OpenOwners (convert.py reads it into Region.own)."""
+    flat = [v for row in grid for v in row]
+    out, i = [], 0
+    while i < len(flat):
+        j = i
+        while j < len(flat) and flat[j] == flat[i]:
+            j += 1
+        out.append('%d*%d' % (j - i, flat[i]))
+        i = j
+    return ','.join(out)
 
 
 def specials(d, kit, where):

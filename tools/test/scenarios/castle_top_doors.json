@@ -1,0 +1,320 @@
+{
+ "name": "castle_top_doors",
+ "comment": "Every door of the castle rooftops (R1 seventh round), seeds 1 to 8: Link walks through every open and locked door of every room (with keys) (step passall: from 56 px inside, he must reach the room behind, out of the walls), bombs every secret door from in front of its wall (step bomb, the top ones with the crack first: the wall must open and he walks through) and takes the main exit (top gate or the stairs of the bottom wall: the level after it must be the next one). Before the seventh round the bomb did not reach the door of a painted room and the stairs of a bottom exit were shut under the rim.",
+ "seed": 1,
+ "level": "CastleTop",
+ "cheats": [
+  "Cheat_Inf_Health",
+  "Cheat_Inf_Keys"
+ ],
+ "max_frames": 60000,
+ "steps": [
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 1"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 2
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 2"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 3
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 3"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 4
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 4"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 5
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 5"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 6
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 6"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 7
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 7"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 8
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 8"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "passall"
+  },
+  {
+   "do": "bomb",
+   "optional": true
+  },
+  {
+   "do": "exit",
+   "which": "main",
+   "frames": 150
+  },
+  {
+   "do": "wait",
+   "frames": 200
+  },
+  {
+   "do": "expect",
+   "exit_level": true,
+   "alive": true
+  }
+ ]
+}

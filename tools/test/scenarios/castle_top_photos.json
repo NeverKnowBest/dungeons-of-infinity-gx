@@ -3,14 +3,35 @@
  "comment": "The agreed photo set of the castle rooftops (R1 sixth round, CLAUDE.md 'Uma revisao so'): every room of seeds 1 and 7 at night in the rain, the top of each 256 px cell and the bottom of its last row (step tour), to look at the walls, the passages, the locks and the cracks at real scale.",
  "seed": 1,
  "level": "CastleTop",
- "cheats": ["Cheat_Inf_Health"],
+ "cheats": [
+  "Cheat_Inf_Health"
+ ],
  "max_frames": 4000,
  "steps": [
-  {"do": "wait", "frames": 30},
-  {"do": "tour", "name": "s1"},
-  {"do": "level", "level": "CastleTop", "seed": 7},
-  {"do": "wait", "frames": 30},
-  {"do": "tour", "name": "s7"},
-  {"do": "expect", "alive": true}
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "tour",
+   "name": "s1"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 7
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "tour",
+   "name": "s7"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  }
  ]
 }

@@ -1,0 +1,215 @@
+{
+ "name": "castle_top_section_photos",
+ "comment": "The agreed photos of the castle rooftops' rooms with a section (R1 seventh round): seeds 1 to 12 built one after the other, a photo of the top of each 256 px cell and the bottom of the last row of every room with a section (step tour with sections), at night in the rain, to look at the low wall, the top wall between the passages and the passages of the section's doors.",
+ "seed": 1,
+ "level": "CastleTop",
+ "cheats": [
+  "Cheat_Inf_Health"
+ ],
+ "max_frames": 12000,
+ "steps": [
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s1",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 2
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s2",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 3
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s3",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 4
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s4",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 5
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s5",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 6
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s6",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 7
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s7",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 8
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s8",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 9
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s9",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 10
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s10",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 11
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s11",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 12
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s12",
+   "sections": true
+  },
+  {
+   "do": "expect",
+   "alive": true
+  }
+ ]
+}

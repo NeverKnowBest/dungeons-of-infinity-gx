@@ -127,6 +127,32 @@ function RegionRoom_CrackSpot(_DoorInst){
 	return [_PX, _PY];
 }
 
+/// Adds to _List the secret doors of painted rooms a blast at _X, _Y (radius _Radius, floor level _FloorLevel) reaches:
+/// it has to touch the wall the door's passage opens (its open tiles), not the door cell. A painted room's walls are
+/// thicker than a dungeon's (64 px on top, with the crack 40 px down), so a bomb at the wall's foot never reached the
+/// 24 px mask of the door (R1, seventh round)
+function RegionRoom_BlastDoors(_List, _X, _Y, _Radius, _FloorLevel){
+	with(oDoor){
+		if(Status == DoorStatus.Secret_Closed && ds_list_find_index(_List, id) == -1 && Collision_CheckFloorLevel(_FloorLevel, id)){
+			var _R = global.Level.Rooms[RoomIndex];
+			var _G = _R[$ "RegionGrid"];
+			if(_G != undefined){
+				var _DX = x - _R.x, _DY = y - _R.y;
+				var _BX = _X - _R.x, _BY = _Y - _R.y;
+				var _Hit = false;
+				//the open tiles in the 64x64 box of the passage (RegionRoom_OpenPassage)
+				for(var j = max(0, (_DY - 24) div 8); j < min(_G.H, (_DY + 56) div 8) && !_Hit; j++){
+					for(var i = max(0, (_DX - 24) div 8); i < min(_G.W, (_DX + 56) div 8) && !_Hit; i++){
+						if(_G.Open[j * _G.W + i] == 0) continue;
+						_Hit = (point_distance(_BX, _BY, clamp(_BX, i * 8, i * 8 + 8), clamp(_BY, j * 8, j * 8 + 8)) <= _Radius);
+					}
+				}
+				if(_Hit) ds_list_add(_List, id);
+			}
+		}
+	}
+}
+
 #macro GATE_SHUT_FRAMES 64	// a gate Link arrives through shuts this long after the level is built: his stair frames and 24 walking
 
 /// Link arrives through a gate: it is open, and shuts behind him once he has walked out (ExitLook.Arrive)

@@ -9,7 +9,8 @@ GetTransformedSectionIDReversed read from the game's code), so every section id 
 
 The low wall is made of the frame's own pieces (kit "parapet"): its rows are rows of the frame's top and bottom walls
 (the top edge of the bottom wall over the face of the top wall), its columns the inner edges of the side walls, and
-where it meets the frame or itself it takes the frame's corner pieces, so it joins as the approved frame does.
+where it meets the frame or itself it takes the frame's corner pieces, so it joins as the approved frame does; under the
+top wall a column only hangs from the face's foot (R1 seventh round), the wall whole above it.
 """
 import os
 import re
@@ -213,13 +214,12 @@ class Parapet:
             for dj, edge in ((-1, 'top'), (1, 'bottom')):
                 nj = j + dj
                 if not 0 <= nj <= 4:
-                    # the frame: its top wall's face rows (top) or its bottom wall's edge row (bottom)
+                    # the frame: under its top wall the column just hangs from the face's foot, the wall whole above
+                    # it (R1 seventh round: the frame's corners on both sides of the column, with their posts up to
+                    # the room's edge, cut the top wall into blocks and ran into the next top door's wall end);
+                    # onto its bottom wall's edge row it takes the bottom wall's corners
                     if edge == 'top':
-                        piece_rows = range(1, len(self.part['top'][0]))
-                        for br in piece_rows:
-                            for qy in range(2):
-                                ty = iy[0][0] - (len(self.part['top'][0]) - br) * 2 + qy
-                                self._join(put, x0, ty, 'top', br, qy, True, True, v_tile)
+                        continue
                     else:
                         for qy in range(2):
                             ty = iy[4][1] + qy

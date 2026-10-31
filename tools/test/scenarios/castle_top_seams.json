@@ -1,0 +1,37 @@
+{
+ "name": "castle_top_seams",
+ "comment": "The agreed photos of the seams between the castle rooftops' rooms (R1 seventh round, CLAUDE.md 'Uma revisao so'): every door of every painted room in use in seeds 1 and 7, at night in the rain, Link a little inside it and the room's enemies gone (step doorshots, after the level's name has faded); python tools/test/seam_sheet.py castle_top_seams puts the two sides of each seam together.",
+ "seed": 1,
+ "level": "CastleTop",
+ "cheats": [
+  "Cheat_Inf_Health"
+ ],
+ "max_frames": 8000,
+ "steps": [
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "doorshots",
+   "name": "s1"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 7
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "doorshots",
+   "name": "s7"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  }
+ ]
+}
