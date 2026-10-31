@@ -51,9 +51,10 @@ WALKED_OBJECTS = {86}       # Objs Link walks over (Rupee_05: picked up); the ot
 KIT_KEYS = {'tiles', 'area', 'pieces', 'frame', 'frames', 'openings', 'gate', 'grass', 'nature', 'parapet', 'auto',
             'comment'}
 GRASS_KEYS = ('full', 'top', 'bottom', 'left', 'corner', 'inner')
-# Nature motifs (docs/design/direcao.md, "Natureza invadindo"): solid pieces on a patch of grass that spreads over the
-# floor. Trees: one in the middle of each half of a 2x1 or 1x2 room (a pair); bushes: a 2x2 clump on each side of the
-# middle axis (a mirrored pair), at the first height that keeps the door lanes free. Tufts go on the grass only.
+# Nature motifs (docs/design/direcao.md, "Natureza invadindo"): pieces on a patch of grass that spreads over the
+# floor. Trees (solid tiles): one in the middle of each half of a 2x1 or 1x2 room (a pair); bushes: a 2x2 clump on each
+# side of the middle axis (a mirrored pair), at the first height that keeps the door lanes free, each bush an oBush the
+# game puts on the grass (RegionBushes). Tufts go on the grass only.
 NATURE_MOTIFS = ('Nature/trees', 'Nature/bushes')
 DECOR_KEYS = {'piece', 'at', 'pair', 'mirror'}
 TILESETS_DIR = os.path.join(convert.TEMPLATE_DIR, 'tilesets')
@@ -248,6 +249,7 @@ class Painted:
         self.gate = [[None] * (self.cw * 2) for _ in range(self.ch * 2)]
         self.gate_doors = []
         self.gate_boxes = []
+        self.bushes = []        # px of the 16x16 cells where the game puts an oBush (Nature/bushes, R1 eighth round)
         self.object_boxes = [(o['x'], o['y'], o['width'], o['height']) for objs in (special or {}).get('objects', {}).values()
                              for o in objs]
         self.build()
@@ -337,9 +339,11 @@ class Painted:
             ox = {'Top': (x - 16, 0), 'Bottom': (x - 16, H - ph), 'Left': (0, y - 16), 'Right': (W - pw, y - 16)}[loc]
             # a side door by the top corner (positions 2 and 10) runs under the top wall: its passage leaves the
             # wall's face whole above it instead of cutting the corner away (R1, sixth round: "canto com aresta vazia"),
-            # and the top wall goes on over it to the room's edge (under_top_wall)
+            # and the top wall goes on over it to the room's edge (under_top_wall). Only there: the first row of any
+            # other side passage is the edge of the cream above the corridor, with its outline (R1 eighth round: it was
+            # cut at the door cell, and the cream ended straight)
             side = loc in ('Left', 'Right')
-            self.stamp_open(piece, ox[0], ox[1], p, clip_top=max(th, y) if side else 0)
+            self.stamp_open(piece, ox[0], ox[1], p, clip_top=th if side else 0)
             if side and y - 16 < th:
                 under.append((p, loc, y))
             boxes.append((p, (ox[0], ox[1], pw, ph)))
@@ -689,11 +693,24 @@ class Painted:
         return out
 
     def nature(self, motif):
-        """A nature motif: solid pieces in a symmetric layout off the door lanes, on a patch of grass spreading over
-        the floor around them (marching squares over a grid of corners; the kit's grass pieces are the edges)."""
-        k, where = self.kit, self.where
+        """A nature motif: pieces (trees solid, bushes an oBush each) in a symmetric layout off the door lanes, on a
+        patch of grass spreading over the floor around them (marching squares over a grid of corners; the kit's grass
+        pieces are the edges). Bushes are a 2x2 clump on each side, or, where the door lanes leave no room for it (a
+        1x1 room with a door low on each side), a smaller one: 2x1, 1x2, a single bush (R1 eighth round)."""
         if motif not in NATURE_MOTIFS:
-            raise PaintError('%s: nature motif "%s" (motifs: %s)' % (where, motif, ', '.join(NATURE_MOTIFS)))
+            raise PaintError('%s: nature motif "%s" (motifs: %s)' % (self.where, motif, ', '.join(NATURE_MOTIFS)))
+        clumps = [(2, 2), (2, 1), (1, 2), (1, 1)] if motif == 'Nature/bushes' else [(1, 1)]
+        kept = ([row[:] for row in self.base], list(self.decor_boxes), list(self.bushes))
+        for i, clump in enumerate(clumps):
+            try:
+                return self._nature(motif, clump)
+            except PaintError:
+                if i == len(clumps) - 1:
+                    raise
+                self.base, self.decor_boxes, self.bushes = [row[:] for row in kept[0]], list(kept[1]), list(kept[2])
+
+    def _nature(self, motif, clump):
+        k, where = self.kit, self.where
         if not k.grass:
             raise PaintError('%s: nature motifs need "grass" in the kit' % where)
         x0, y0, x1, y1 = self.inner
@@ -702,8 +719,8 @@ class Painted:
         piece = k.get(k.nature.get(name), where)
         pw, ph = len(piece[0]) * 16, len(piece) * 16
         if name == 'bush':
-            piece = [row * 2 for row in piece] * 2       # a 2x2 clump
-            pw, ph = pw * 2, ph * 2
+            piece = [row * clump[0] for row in piece] * clump[1]       # a clump of clump[0] x clump[1] bushes
+            pw, ph = pw * clump[0], ph * clump[1]
         # where the pieces go: one in each half (trees, a 2x1 or 1x2 room), or a pair on the two sides of the middle
         # axis (bushes); of the spots whose pieces keep the door lanes and the decoration free, the nearest to the
         # middle of the half (trees) or to a quarter of the room (bushes)
@@ -801,7 +818,12 @@ class Painted:
             if not cells <= full:
                 raise PaintError('%s: the grass of %s does not cover its pieces' % (where, motif))
             used |= cells
-            self.stamp(self.base, piece, sx, sy, where=where)
+            if name == 'bush':
+                # each bush of the clump is an oBush on the grass, as in the DoI (cut with the sword, lifted), never a
+                # tile of wall (R1 eighth round)
+                self.bushes += [(bx, by) for by in range(sy, sy + ph, 16) for bx in range(sx, sx + pw, 16)]
+            else:
+                self.stamp(self.base, piece, sx, sy, where=where)
             self.decor_boxes.append((sx, sy, pw, ph))
         # tufts on the grass, mirrored about the middle axis, off the pieces
         tufts = [k.get(n, where) for n in (k.nature.get('tufts') or [])]
@@ -995,6 +1017,8 @@ class Painted:
             p['Fallback'] = 1       # picked only when no other room of the set fits (RoomTemplates_Pick)
         if any(any(row) for row in self.owner):
             p['OpenOwners'] = owners_rle(self.owner)    # convert.py makes it Region.own
+        if self.bushes:
+            p['RegionBushes'] = ','.join('%d,%d' % b for b in self.bushes)     # convert.py makes it Region.bushes
         p.update(self.d.get('props') or {})
         return p
 

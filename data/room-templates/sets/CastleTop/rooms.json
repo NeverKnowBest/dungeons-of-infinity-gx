@@ -146,10 +146,74 @@
    "decor": [{"piece": "tower", "at": [48, 16], "pair": true}, {"piece": "crest", "at": [112, 112]}]
   },
   {
+   "name": "TwinGarden",
+   "comment": "TwinGates with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors).",
+   "size": "1x1",
+   "doors": [11, 1, 3, 6, 9],
+   "decor": [{"piece": "tower", "at": [104, 16]}, {"piece": "crest", "at": [112, 112]}],
+   "nature": ["Nature/bushes"]
+  },
+  {
+   "name": "RampartGarden",
+   "comment": "Rampart with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors).",
+   "size": "1x1",
+   "doors": [11, 1, 3, 5, 8],
+   "decor": [{"piece": "tower", "at": [104, 16]}],
+   "nature": ["Nature/bushes"]
+  },
+  {
+   "name": "SideGarden",
+   "comment": "SideTower with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors), without the crest, which left the grass no room.",
+   "size": "1x1",
+   "doors": [1, 4, 6, 8, 10],
+   "decor": [{"piece": "tower", "at": [48, 16]}],
+   "nature": ["Nature/bushes"]
+  },
+  {
+   "name": "LampGarden",
+   "comment": "LampCourt with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors).",
+   "size": "1x1",
+   "doors": [12, 2, 4, 7, 9],
+   "decor": [{"piece": "tower", "at": [48, 16], "pair": true}],
+   "nature": ["Nature/bushes"]
+  },
+  {
+   "name": "LowGarden",
+   "comment": "LowGates with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors).",
+   "size": "1x1",
+   "doors": [12, 3, 5, 7, 9],
+   "decor": [{"piece": "tower", "at": [48, 16], "pair": true}, {"piece": "crest", "at": [112, 112]}],
+   "nature": ["Nature/bushes"]
+  },
+  {
+   "name": "GateGarden",
+   "comment": "Gatehouse with grass and bushes over the terrace between the walkways (R1 eighth round: more rooms with nature, the same doors).",
+   "size": "1x1",
+   "doors": [12, 2, 4, 6, 8, 10],
+   "decor": [{"piece": "tower", "at": [48, 16], "pair": true}, {"piece": "crest", "at": [112, 112]}],
+   "nature": ["Nature/bushes"]
+  },
+  {
    "name": "Overlook",
    "comment": "The outer wall of the castle on the left side: past its riveted face, the grass and trees down below (the game mirrors it for the right side). No passage on that side.",
    "size": "1x1",
    "doors": [12, 2, 4, 6],
+   "frame": "view_left",
+   "decor": [{"piece": "tree_half", "at": [0, 56]}, {"piece": "tree_half", "at": [0, 152]}, {"piece": "crest", "at": [128, 112]}]
+  },
+  {
+   "name": "CourtView",
+   "comment": "The outer wall of the castle on the left, like Overlook, with a passage in the middle of the right side (R1 eighth round: more rooms with a view; with its mirror it fits the rooms whose doors are 12, 6 and one side).",
+   "size": "1x1",
+   "doors": [12, 3, 6],
+   "frame": "view_left",
+   "decor": [{"piece": "tree_half", "at": [0, 56]}, {"piece": "tree_half", "at": [0, 152]}, {"piece": "crest", "at": [128, 112]}]
+  },
+  {
+   "name": "GateView",
+   "comment": "The outer wall of the castle on the left, with passages at the top, in the middle of the right side and at the bottom right corner (R1 eighth round).",
+   "size": "1x1",
+   "doors": [12, 3, 5],
    "frame": "view_left",
    "decor": [{"piece": "tree_half", "at": [0, 56]}, {"piece": "tree_half", "at": [0, 152]}, {"piece": "crest", "at": [128, 112]}]
   },
@@ -215,6 +279,22 @@
    "decor": [{"piece": "tower", "at": [168, 16], "pair": true}, {"piece": "bushes_low", "at": [48, 240], "pair": true}, {"piece": "bushes_low", "at": [160, 240], "pair": true}]
   },
   {
+   "name": "WideView",
+   "comment": "A wide stretch of terrace with the outer wall of the castle on the left: past its riveted face, the grass and trees down below (R1 eighth round: the wide rooms' passages are at the top and bottom, so a view on the side fits most of them).",
+   "size": "2x1",
+   "doors": [11, 12, 1, 2, 4, 5, 6, 7],
+   "frame": "view_left",
+   "decor": [{"piece": "tree_half", "at": [0, 56]}, {"piece": "tree_half", "at": [0, 152]}, {"piece": "tower", "at": [168, 16], "pair": true}]
+  },
+  {
+   "name": "WideViewMiddle",
+   "comment": "WideView with a passage in the middle of the right side.",
+   "size": "2x1",
+   "doors": [11, 12, 1, 3, 5, 6, 7],
+   "frame": "view_left",
+   "decor": [{"piece": "tree_half", "at": [0, 56]}, {"piece": "tree_half", "at": [0, 152]}, {"piece": "tower", "at": [168, 16], "pair": true}]
+  },
+  {
    "name": "OpenTerrace",
    "comment": "A bare terrace open on every side: the room for door sets no other room has (picked only when none fits, \"Fallback\").",
    "size": "1x1",
@@ -259,6 +339,20 @@
    "size": "1x1",
    "doors": "all",
    "sections": [15]
+  },
+  {
+   "name": "WalledBig",
+   "comment": "The big corner at the top (section 21 of the shared Sections rooms, doors 11, 12, 10 and 9), and its mirror: outdoors it is painted too (R1 eighth round).",
+   "size": "1x1",
+   "doors": "all",
+   "sections": [21]
+  },
+  {
+   "name": "WalledBigLow",
+   "comment": "The big corner at the bottom (section 23), and its mirror.",
+   "size": "1x1",
+   "doors": "all",
+   "sections": [23]
   },
   {
    "name": "LongWalledTop",

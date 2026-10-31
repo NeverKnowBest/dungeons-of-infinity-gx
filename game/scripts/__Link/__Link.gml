@@ -1153,8 +1153,9 @@ function CheckRoomTransition(){
 		}else{
 			//if no door is detected it means we're walking off the edge of an open Room with no wall (village)
 			//a painted room is walled all round: it is left only through a door (RegionRoom_OffLane); this transition
-			//would put to sleep the room Link is still standing in
-			if(RegionRoom_Is(global.CurrentRoomIndex)) exit;
+			//would put to sleep the room Link is still standing in. Outdoor levels have no open rooms at all, painted
+			//or not (R1 eighth round: Link walked off a room of the shared templates into the wall of the room below)
+			if(RegionRoom_Is(global.CurrentRoomIndex) || LevelDef.Layout == LevelLayout.Outdoor) exit;
 
 			
 			if(vx < 0 && x < global.CurrentRoom.x + 16){

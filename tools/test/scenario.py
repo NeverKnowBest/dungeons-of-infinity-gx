@@ -42,6 +42,8 @@ STEPS = {
     'tour': {'name', 'sections'},
     'doorshots': {'name', 'in'},
     'passall': {'in', 'frames'},
+    'walkall': {'in', 'frames'},
+    'cut': set(),
     'bomb': {'in', 'frames', 'optional'},
     'grid': {'cells', 'x', 'y', 'w', 'name'},
     'exit': {'which', 'frames'},

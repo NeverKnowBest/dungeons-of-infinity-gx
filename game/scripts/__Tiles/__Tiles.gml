@@ -415,13 +415,38 @@ function RegionRoom_Paint(_RoomIndex){
 		RegionRoom_OpenPassage(_RoomIndex, _Door.x, _Door.y, false);
 	}
 	RegionRoom_Walls(_RoomIndex);
+	RegionRoom_Bushes(_RoomIndex, _Reg, _Tr);
 	return true;
 }
 
-/// The section group of a section id (Split_MainSectionIDs order): 1 corners, 2 middles, 3 wide, 4 strips
+/// The bushes of a painted room's nature (paint_rooms.py, Nature/bushes): an oBush on each 16x16 cell, on the grass, as
+/// the DoI puts them (Dungeon_Draw_SpecialObjs_Forced): cut by the sword, lifted, a pot's item inside (R1 eighth round:
+/// they were tiles of wall). The wall under each is its own, not one of the room's painted walls (RegionGrid.Walls)
+function RegionRoom_Bushes(_RoomIndex, _Reg, _Tr){
+	var _B = _Reg[$ "bushes"];
+	if(_B == undefined) return;
+	var _R = global.Level.Rooms[_RoomIndex];
+	for(var b = 0; b + 1 < array_length(_B); b += 2){
+		var _C0 = RegionTiles_TransformCell(_B[b] div 8, _B[b + 1] div 8, _Reg.w, _Reg.h, _Tr);
+		var _C1 = RegionTiles_TransformCell(_B[b] div 8 + 1, _B[b + 1] div 8 + 1, _Reg.w, _Reg.h, _Tr);
+		var _X = _R.x + min(_C0[0], _C1[0]) * 8;
+		var _Y = _R.y + min(_C0[1], _C1[1]) * 8;
+		var _Bush = instance_create_layer(_X + 8, _Y + 15, "ObjsDoors_Upper", oBush);
+		_Bush.ContentsObj = Probs_RandomItemClass_Pot(false, true);
+		_Bush.Index = 0;
+		_Bush.image_index = 0;
+		var _Wall = RegionRoom_WallCreate(_X, _Y, 2, 2);
+		_Wall.BlockItems = false;
+		_Wall.BlockProjectiles = false;
+		_Bush.WallObj = _Wall;
+	}
+}
+
+/// The section group of a section id (Split_MainSectionIDs order): 1 corners (the big corners 21 to 24 too: outdoor
+/// levels put them on painted rooms, R1 eighth round), 2 middles, 3 wide, 4 strips
 function RegionRoom_SectionGroup(_SectionID){
 	switch(_SectionID){
-		case 1: case 3: case 6: case 8: return 1;
+		case 1: case 3: case 6: case 8: case 21: case 22: case 23: case 24: return 1;
 		case 2: case 4: case 5: case 7: return 2;
 	}
 	return (_SectionID <= 16) ? 3 : 4;

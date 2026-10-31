@@ -565,6 +565,11 @@ def add_region(t, room, layers, tilesets, where):
             raise ConvertError('%s: room %s: OpenOwners has %d cells, the room %d' % (where, gm_str(room['id']), len(own), len(base)))
         t['Region']['own'] = own
         t['properties'] = [q for q in t['properties'] if q.get('name') != 'OpenOwners']
+    # the 16x16 cells where the game puts an oBush (paint_rooms, Nature/bushes): x, y px of each, one after the other
+    bushes = get_prop(t.get('properties'), 'RegionBushes')
+    if bushes != -1:
+        t['Region']['bushes'] = [float(v) for v in str(bushes).split(',')]
+        t['properties'] = [q for q in t['properties'] if q.get('name') != 'RegionBushes']
     if 'RegionGate' in found:
         n3, gate = region_cells(found['RegionGate'], room, tilesets, where)
         if n3 not in (None, name):

@@ -1,12 +1,12 @@
 {
  "name": "castle_top_section_photos",
- "comment": "The agreed photos of the castle rooftops' rooms with a section (R1 seventh round): seeds 1 to 12 built one after the other, a photo of the top of each 256 px cell and the bottom of the last row of every room with a section (step tour with sections), at night in the rain, to look at the low wall, the top wall between the passages and the passages of the section's doors.",
+ "comment": "The agreed photos of the castle rooftops' rooms with a section (R1 seventh round): seeds 1 to 12 built one after the other, and 34, 71 and 99 (their room with section 21 or 22, the big corner: R1 eighth round), a photo of the top of each 256 px cell and the bottom of the last row of every room with a section (step tour with sections), at night in the rain, to look at the low wall, the top wall between the passages and the passages of the section's doors.",
  "seed": 1,
  "level": "CastleTop",
  "cheats": [
   "Cheat_Inf_Health"
  ],
- "max_frames": 12000,
+ "max_frames": 16000,
  "steps": [
   {
    "do": "wait",
@@ -205,6 +205,57 @@
   {
    "do": "tour",
    "name": "s12",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 34
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s34",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 71
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s71",
+   "sections": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 99
+  },
+  {
+   "do": "wait",
+   "frames": 240
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "tour",
+   "name": "s99",
    "sections": true
   },
   {

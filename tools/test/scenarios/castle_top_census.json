@@ -1,0 +1,1611 @@
+{
+ "name": "castle_top_census",
+ "comment": "The castle rooftops in 100 seeds (R1 eighth round): one 'layout' line per room of each level (step rooms) with its template, for python tools/test/census.py castle_top_census, which counts the rooms by class, set, nature and view. Proof that no room of the rooftops comes from the dungeon's Sections class (the built-in sections 21 to 24 are painted too).",
+ "seed": 1,
+ "level": "CastleTop",
+ "cheats": [
+  "Cheat_Inf_Health"
+ ],
+ "max_frames": 20000,
+ "steps": [
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 1"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 2
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 2"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 3
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 3"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 4
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 4"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 5
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 5"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 6
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 6"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 7
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 7"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 8
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 8"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 9
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 9"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 10
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 10"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 11
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 11"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 12
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 12"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 13
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 13"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 14
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 14"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 15
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 15"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 16
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 16"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 17
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 17"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 18
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 18"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 19
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 19"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 20
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 20"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 21
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 21"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 22
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 22"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 23
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 23"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 24
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 24"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 25
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 25"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 26
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 26"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 27
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 27"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 28
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 28"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 29
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 29"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 30
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 30"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 31
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 31"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 32
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 32"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 33
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 33"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 34
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 34"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 35
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 35"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 36
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 36"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 37
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 37"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 38
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 38"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 39
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 39"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 40
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 40"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 41
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 41"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 42
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 42"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 43
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 43"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 44
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 44"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 45
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 45"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 46
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 46"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 47
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 47"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 48
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 48"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 49
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 49"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 50
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 50"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 51
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 51"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 52
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 52"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 53
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 53"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 54
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 54"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 55
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 55"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 56
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 56"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 57
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 57"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 58
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 58"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 59
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 59"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 60
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 60"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 61
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 61"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 62
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 62"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 63
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 63"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 64
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 64"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 65
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 65"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 66
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 66"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 67
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 67"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 68
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 68"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 69
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 69"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 70
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 70"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 71
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 71"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 72
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 72"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 73
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 73"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 74
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 74"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 75
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 75"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 76
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 76"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 77
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 77"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 78
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 78"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 79
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 79"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 80
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 80"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 81
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 81"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 82
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 82"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 83
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 83"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 84
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 84"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 85
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 85"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 86
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 86"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 87
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 87"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 88
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 88"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 89
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 89"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 90
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 90"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 91
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 91"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 92
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 92"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 93
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 93"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 94
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 94"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 95
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 95"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 96
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 96"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 97
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 97"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 98
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 98"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 99
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 99"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 100
+  },
+  {
+   "do": "wait",
+   "frames": 2
+  },
+  {
+   "do": "log",
+   "text": "seed 100"
+  },
+  {
+   "do": "rooms"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  }
+ ]
+}

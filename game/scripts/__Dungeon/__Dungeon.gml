@@ -549,8 +549,9 @@ function Dungeon_CreateStruct_Room(_RoomIndex) constructor{
 	
 	
 	
-	//an outdoor level paints its sections on its own rooms (paint_sections.py): never the dungeon's Sections templates
-	if(SizeIndex == RoomSize._1x1 && (Section_ID > 20 || (Section_ID > 0 && Section_ID <= 20 && Section_WallType == SectionWallType.Rail && Prob(Chance_SectionTemplate) && LevelDef.Layout != LevelLayout.Outdoor)) ){
+	//an outdoor level paints its sections on its own rooms (paint_sections.py): never the dungeon's Sections templates,
+	//not even the built-in sections over 20 (R1 eighth round: a 1x1 room with section 21 or 22 was the castle's room)
+	if(SizeIndex == RoomSize._1x1 && ((Section_ID > 20 && LevelDef.Layout != LevelLayout.Outdoor) || (Section_ID > 0 && Section_ID <= 20 && Section_WallType == SectionWallType.Rail && Prob(Chance_SectionTemplate) && LevelDef.Layout != LevelLayout.Outdoor)) ){
 		TemplateClass = RoomTemplateClass.Sections;
 	}else if(UpperDoors && !LowerDoors){
 		

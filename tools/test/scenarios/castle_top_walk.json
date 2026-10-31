@@ -1,0 +1,205 @@
+{
+ "name": "castle_top_walk",
+ "comment": "Every door of the castle rooftops from the middle of its room (R1 eighth round), seeds 1 to 4 and 34, 71 and 99 (the ones whose room with section 21 or 22 came from the dungeon's Sections class): step walkall (Link starts on the floor nearest the middle that reaches the door, walks the shortest way to the mouth of its passage and through it; he must reach the room behind, out of the walls) and step cut (one bush of every room with bushes: Link swings the sword under it and it must be gone, wall and all). Runs at 300 frames a second (the steps count frames, not time): at 60 it took over the 600 s a scenario may take.",
+ "seed": 1,
+ "level": "CastleTop",
+ "speed": 300,
+ "cheats": [
+  "Cheat_Inf_Health",
+  "Cheat_Inf_Keys"
+ ],
+ "max_frames": 200000,
+ "steps": [
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 1"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 2
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 2"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 3
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 3"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 4
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 4"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 34
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 34"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 71
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 71"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  },
+  {
+   "do": "level",
+   "level": "CastleTop",
+   "seed": 99
+  },
+  {
+   "do": "wait",
+   "frames": 30
+  },
+  {
+   "do": "log",
+   "text": "seed 99"
+  },
+  {
+   "do": "give",
+   "item": "Key",
+   "amount": 20
+  },
+  {
+   "do": "walkall"
+  },
+  {
+   "do": "cut"
+  },
+  {
+   "do": "expect",
+   "alive": true
+  }
+ ]
+}

@@ -4,8 +4,9 @@ of the dungeons ask (Section_ID of a room), painted with the region's tiles inst
 The floor of a painted room is seen as a 5x5 grid of bands: three door slots across (the columns of doors 11, 12 and 1,
 the rows of doors 10, 9 and 8) and the two lines between them, where the low wall stands. A section is a set of band
 cells, its wall the line cells around it. The canonical sections of the shared templates (1 corner, 2 top middle, 9
-wide, 17 strip) are drawn on that grid and turned by the game's own tables (rt_tables, and the 2x1 table of
-GetTransformedSectionIDReversed read from the game's code), so every section id a layout gives has its painted shape.
+wide, 17 strip, and the big corner 21 of the built-in Sections rooms, 1x1 only) are drawn on that grid and turned by the
+game's own tables (rt_tables, and the 2x1 table of GetTransformedSectionIDReversed read from the game's code), so every
+section id a layout gives has its painted shape.
 
 The low wall is made of the frame's own pieces (kit "parapet"): its rows are rows of the frame's top and bottom walls
 (the top edge of the bottom wall over the face of the top wall), its columns the inner edges of the side walls, and
@@ -24,12 +25,15 @@ CANON = {       # band cells of the section and of its wall, on the grid of a ro
     2: ({(2, 0)}, {(1, 0), (1, 1), (2, 1), (3, 1), (3, 0)}),
     9: ({(0, 0), (1, 0), (2, 0)}, {(3, 0), (3, 1), (2, 1), (1, 1), (0, 1)}),
     17: ({(i, 0) for i in range(5)}, {(i, 1) for i in range(5)}),
+    # the big corner (doors 11, 12, 10 and 9), a built-in section of the shared Sections templates that layouts give
+    # only to 1x1 rooms; outdoor levels paint it like the others (R1 eighth round), in the corners' group
+    21: ({(i, j) for i in range(3) for j in range(3)}, {(3, j) for j in range(4)} | {(i, 3) for i in range(3)}),
 }
+ONLY_1X1 = {21}
 GROUP_OF_ID = {}
-for _g, _ids in enumerate(((1, 3, 6, 8), (2, 4, 5, 7), tuple(range(9, 17)), (17, 18, 19, 20))):
+for _g, _ids in enumerate(((1, 3, 6, 8, 21, 22, 23, 24), (2, 4, 5, 7), tuple(range(9, 17)), (17, 18, 19, 20))):
     for _s in _ids:
         GROUP_OF_ID[_s] = _g
-CANON_OF_GROUP = [1, 2, 9, 17]
 # the door slots on the band grid: (cell, wall)
 DOOR_SLOT = {11: ((0, 0), 'Top'), 12: ((2, 0), 'Top'), 1: ((4, 0), 'Top'), 2: ((4, 0), 'Right'), 3: ((4, 2), 'Right'),
              4: ((4, 4), 'Right'), 5: ((4, 4), 'Bottom'), 6: ((2, 4), 'Bottom'), 7: ((0, 4), 'Bottom'),
@@ -80,6 +84,8 @@ def shapes(size):
     if size == (512, 256):
         rev = _reversed_2x1()
         for c, (sec, wall) in CANON.items():
+            if c in ONLY_1X1:
+                continue
             for (tid, n), t in rev.items():
                 if tid == c and n not in out:
                     f = BAND_T[t]
@@ -87,6 +93,8 @@ def shapes(size):
         return out
     names = convert.TRANSFORMS if size == (256, 256) else ['None', 'FlipH', 'FlipV', 'FlipHV']
     for c, (sec, wall) in CANON.items():
+        if c in ONLY_1X1 and size != (256, 256):
+            continue
         for t in names:
             n = c if t == 'None' else rt_tables.SECTION_ID[t].get(c, c)
             if n not in out:
@@ -114,7 +122,7 @@ def selftest():
                 raise SectionError('band transform %s moves door %d to %d, the game to %d'
                                    % (t, p, q, convert.transformed_door_position(p, ti)))
     # the canonical doors are the ones of make_rooms.SECTIONS
-    for c, d in ((1, [10, 11]), (2, [12]), (9, [10, 11, 12]), (17, [1, 2, 10, 11, 12])):
+    for c, d in ((1, [10, 11]), (2, [12]), (9, [10, 11, 12]), (17, [1, 2, 10, 11, 12]), (21, [9, 10, 11, 12])):
         if doors_of(CANON[c][0]) != d:
             raise SectionError('section %d has doors %s, not %s' % (c, doors_of(CANON[c][0]), d))
 
